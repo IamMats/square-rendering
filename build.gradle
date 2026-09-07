@@ -1,0 +1,86 @@
+plugins {
+    id 'fabric-loom' version '1.16.1'
+    id 'checkstyle'
+}
+
+version = project.mod_version
+group = 'dev.iammats.squarerendering'
+
+base {
+    archivesName = 'square-rendering'
+}
+
+repositories {
+    mavenCentral()
+    maven { url = 'https://maven.caffeinemc.net/releases/' }
+}
+
+loom {
+    splitEnvironmentSourceSets()
+    mods {
+        'square-rendering' {
+            sourceSet sourceSets.main
+            sourceSet sourceSets.client
+        }
+    }
+    runs {
+        server {
+            runDir 'run-server'
+        }
+    }
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    mappings loom.officialMojangMappings()
+    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+    modClientImplementation "net.caffeinemc:sodium-fabric:${project.sodium_version}"
+
+    testImplementation platform('org.junit:junit-bom:5.12.2')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+java {
+    toolchain.languageVersion = JavaLanguageVersion.of(21)
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.release = 21
+    options.encoding = 'UTF-8'
+}
+
+processResources {
+    inputs.property 'version', project.version
+    filesMatching('fabric.mod.json') {
+        expand version: project.version
+    }
+}
+
+jar {
+    from('LICENSE') {
+        rename { 'LICENSE_square-rendering' }
+    }
+}
+
+test {
+    useJUnitPlatform()
+}
+
+checkstyle {
+    toolVersion = '10.26.1'
+    configFile = file('config/checkstyle/checkstyle.xml')
+    maxWarnings = 0
+}
+
+// The runtime harness is never included in the distributable mod JAR.
+if (providers.gradleProperty('gameTests').isPresent()) {
+    fabricApi.configureTests {
+        createSourceSet = true
+        modId = 'square-rendering-tests'
+        enableGameTests = false
+        enableClientGameTests = true
+        eula = true
+    }
+}

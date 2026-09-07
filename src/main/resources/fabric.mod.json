@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "square-rendering",
+  "version": "${version}",
+  "name": "Square Rendering",
+  "description": "Render a complete square of chunks around the player, with optional server support in the same mod.",
+  "authors": ["IamMats"],
+  "contact": {
+    "sources": "https://github.com/IamMats/square-rendering",
+    "issues": "https://github.com/IamMats/square-rendering/issues"
+  },
+  "license": "GPL-3.0-only",
+  "environment": "*",
+  "entrypoints": {
+    "main": ["dev.iammats.squarerendering.SquareRendering"],
+    "client": ["dev.iammats.squarerendering.client.SquareRenderingClient"],
+    "sodium:config_api_user": ["dev.iammats.squarerendering.client.SodiumOptions"]
+  },
+  "mixins": [
+    "square-rendering.mixins.json",
+    {"config": "square-rendering.client.mixins.json", "environment": "client"}
+  ],
+  "depends": {
+    "fabricloader": ">=0.19.2",
+    "minecraft": "1.21.11",
+    "java": ">=21",
+    "fabric-api": ">=0.141.6"
+  },
+  "suggests": {"sodium": "0.8.14"}
+}
