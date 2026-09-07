@@ -4,14 +4,12 @@ import dev.iammats.squarerendering.mixin.ChunkMapAccess;
 import dev.iammats.squarerendering.network.SquareRequestPayload;
 import dev.iammats.squarerendering.network.SquareStatusPayload;
 import dev.iammats.squarerendering.server.SquarePlayerState;
+import java.util.Objects;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.resources.Identifier;
-
-import java.util.Objects;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,7 +25,7 @@ public final class SquareRendering implements ModInitializer {
   }
 
   @Override
-   @SuppressWarnings("null")
+  @SuppressWarnings("null")
   public void onInitialize() {
     PayloadTypeRegistry.playC2S().register(SquareRequestPayload.TYPE, SquareRequestPayload.CODEC);
     PayloadTypeRegistry.playS2C().register(SquareStatusPayload.TYPE, SquareStatusPayload.CODEC);
