@@ -80,7 +80,7 @@ test {
 
 checkstyle {
     toolVersion = '10.26.1'
-    configFile = file('config/checkstyle/checkstyle.xml')
+    configFile = file('checkstyle.xml')
     maxWarnings = 0
 }
 
