@@ -30,5 +30,6 @@ build/
 run/
 run-server/
 docs/
+.vscode/
 .idea/
 *.iml
