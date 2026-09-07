@@ -2,6 +2,7 @@ package dev.iammats.squarerendering.geometry;
 
 /** An inclusive square of chunk columns, independent of camera position and rotation. */
 public record ChunkSquare(int centerX, int centerZ, int radius) {
+  /** Rejects negative radii instead of creating an inverted footprint. */
   public ChunkSquare {
     if (radius < 0) {
       throw new IllegalArgumentException("Chunk radius must be nonnegative");
