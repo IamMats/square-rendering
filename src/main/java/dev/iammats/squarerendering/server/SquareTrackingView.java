@@ -6,6 +6,7 @@ import net.minecraft.server.level.ChunkTrackingView;
 import net.minecraft.world.level.ChunkPos;
 
 /** Immutable tracking shape; the additional border supplies neighbors for client meshing. */
+@SuppressWarnings("null")
 public record SquareTrackingView(ChunkSquare visibleSquare) implements ChunkTrackingView {
   /** Returns the transmitted footprint, including its invisible support border. */
   public ChunkSquare deliverySquare() {

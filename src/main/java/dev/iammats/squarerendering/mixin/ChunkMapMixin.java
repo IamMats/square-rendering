@@ -11,6 +11,7 @@ import net.minecraft.server.level.ChunkTrackingView;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.ChunkPos;
+
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -30,7 +31,7 @@ public abstract class ChunkMapMixin {
   private void applyChunkTrackingView(ServerPlayer player, ChunkTrackingView view) {
     throw new AssertionError();
   }
-
+  @SuppressWarnings("null")
   @Inject(method = "updateChunkTracking", at = @At("HEAD"), cancellable = true)
   private void squareRenderingUpdateTracking(ServerPlayer player, CallbackInfo ci) {
     SquarePlayerState state = (SquarePlayerState) player;
@@ -51,7 +52,7 @@ public abstract class ChunkMapMixin {
     }
     ci.cancel();
   }
-
+  @SuppressWarnings("null")
   @Inject(method = "applyChunkTrackingView", at = @At("HEAD"))
   private void squareRenderingSendCenter(
       ServerPlayer player, ChunkTrackingView next, CallbackInfo ci) {
