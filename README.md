@@ -1,6 +1,6 @@
 # Square Rendering
 
-A Fabric mod for **Minecraft Java 1.21.11** that renders a square of chunks around the player's current chunk, with a toggle in Sodium's Video Settings.
+A Fabric mod for **Minecraft Java 1.21.11** that renders a square of chunks around the player's current chunk, with a toggle in Sodium's Video Settings. Useful for observing perimeter operations such as world eaters and trenchers.
 
 At render distance **16**, the visible footprint includes a **33 × 33 grid**: 16 chunks in each horizontal direction plus the center chunk. Distance fog follows a square shape so the diagonal corners can be seen. Chunks outside the camera's view or hidden behind terrain still benefit from normal culling.
 
