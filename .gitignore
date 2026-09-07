@@ -29,5 +29,6 @@ logs/
 build/
 run/
 run-server/
+docs/
 .idea/
 *.iml
