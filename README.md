@@ -8,7 +8,7 @@ The same flat world, looking diagonally at render distance 16:
 
 | Square Rendering enabled | Square Rendering disabled |
 | --- | --- |
-| ![Square terrain boundary](docs/images/square-distance-16.png) | ![Original rounded terrain boundary](docs/images/original-distance-16.png) |
+| ![Square terrain boundary](src/main/resources/assets/square-distance-16.png) | ![Original rounded terrain boundary](src/main/resources/assets/original-distance-16.png) |
 
 ## Installation
 
