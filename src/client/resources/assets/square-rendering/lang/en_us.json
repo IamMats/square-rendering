@@ -1,0 +1,5 @@
+{
+  "square-rendering.options.title": "Square Rendering",
+  "square-rendering.option.enabled": "Enable Square Rendering",
+  "square-rendering.option.enabled.tooltip": "Render chunks in a square around your current chunk, with square distance fog. A distance of 16 includes a 33 × 33 grid. This can increase GPU and memory usage. Singleplayer works automatically; full multiplayer corners require this same mod on the Fabric server. Applying reloads resources. Simulation distance is unchanged."
+}

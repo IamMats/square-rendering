@@ -1,0 +1,7 @@
+{
+  "required": true,
+  "package": "dev.iammats.squarerendering.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": ["ServerPlayerMixin", "ChunkMapAccess", "ChunkMapMixin", "ChunkTrackingViewMixin"],
+  "injectors": {"defaultRequire": 1}
+}

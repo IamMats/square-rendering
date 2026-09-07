@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "id": "square-rendering-tests",
+  "version": "1.0.0",
+  "name": "Square Rendering Runtime Tests",
+  "environment": "*",
+  "entrypoints": {
+    "fabric-client-gametest": ["dev.iammats.squarerendering.test.SquareRenderingGameTest"]
+  }
+}
