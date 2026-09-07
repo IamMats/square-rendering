@@ -7,6 +7,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
 /** Reports the radius permitted by the server, excluding the invisible support border. */
+@SuppressWarnings("null")
 public record SquareStatusPayload(boolean enabled, int radius) implements CustomPacketPayload {
   public static final Type<SquareStatusPayload> TYPE = new Type<>(SquareRendering.id("status_v1"));
   public static final StreamCodec<RegistryFriendlyByteBuf, SquareStatusPayload> CODEC =

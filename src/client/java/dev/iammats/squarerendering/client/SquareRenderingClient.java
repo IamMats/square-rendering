@@ -12,6 +12,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 
 /** Owns the local preference and negotiates optional server support. */
+@SuppressWarnings("null")
 public final class SquareRenderingClient implements ClientModInitializer {
   private static final ConfigStore STORE =
       new ConfigStore(FabricLoader.getInstance().getConfigDir().resolve("square-rendering.json"));

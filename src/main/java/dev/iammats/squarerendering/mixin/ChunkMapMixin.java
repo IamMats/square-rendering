@@ -31,6 +31,7 @@ public abstract class ChunkMapMixin {
     throw new AssertionError();
   }
 
+  @SuppressWarnings("null")
   @Inject(method = "updateChunkTracking", at = @At("HEAD"), cancellable = true)
   private void squareRenderingUpdateTracking(ServerPlayer player, CallbackInfo ci) {
     SquarePlayerState state = (SquarePlayerState) player;
@@ -52,6 +53,7 @@ public abstract class ChunkMapMixin {
     ci.cancel();
   }
 
+  @SuppressWarnings("null")
   @Inject(method = "applyChunkTrackingView", at = @At("HEAD"))
   private void squareRenderingSendCenter(
       ServerPlayer player, ChunkTrackingView next, CallbackInfo ci) {

@@ -4,6 +4,7 @@ import dev.iammats.squarerendering.mixin.ChunkMapAccess;
 import dev.iammats.squarerendering.network.SquareRequestPayload;
 import dev.iammats.squarerendering.network.SquareStatusPayload;
 import dev.iammats.squarerendering.server.SquarePlayerState;
+import java.util.Objects;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
@@ -19,10 +20,12 @@ public final class SquareRendering implements ModInitializer {
 
   /** Creates an identifier in this mod's namespace. */
   public static Identifier id(String path) {
+    Objects.requireNonNull(path, "path must not be null");
     return Identifier.fromNamespaceAndPath(MOD_ID, path);
   }
 
   @Override
+  @SuppressWarnings("null")
   public void onInitialize() {
     PayloadTypeRegistry.playC2S().register(SquareRequestPayload.TYPE, SquareRequestPayload.CODEC);
     PayloadTypeRegistry.playS2C().register(SquareStatusPayload.TYPE, SquareStatusPayload.CODEC);

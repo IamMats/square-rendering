@@ -8,6 +8,7 @@ import net.caffeinemc.mods.sodium.api.config.structure.ConfigBuilder;
 import net.minecraft.network.chat.Component;
 
 /** Uses Sodium's public settings API, including its normal apply and discard behavior. */
+@SuppressWarnings("null")
 public final class SodiumOptions implements ConfigEntryPoint {
   @Override
   public void registerConfigLate(ConfigBuilder builder) {

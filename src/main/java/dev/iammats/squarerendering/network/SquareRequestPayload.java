@@ -7,6 +7,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
 /** Requests square tracking without increasing the client's advertised view distance. */
+@SuppressWarnings("null")
 public record SquareRequestPayload(boolean enabled) implements CustomPacketPayload {
   public static final Type<SquareRequestPayload> TYPE =
       new Type<>(SquareRendering.id("request_v1"));

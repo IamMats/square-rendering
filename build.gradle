@@ -13,6 +13,10 @@ base {
 repositories {
     mavenCentral()
     maven { url = 'https://maven.caffeinemc.net/releases/' }
+    exclusiveContent {
+        forRepository { maven { url = 'https://api.modrinth.com/maven' } }
+        filter { includeGroup 'maven.modrinth' }
+    }
 }
 
 loom {
@@ -26,6 +30,9 @@ loom {
     runs {
         server {
             runDir 'run-server'
+            if (providers.gradleProperty('withoutSquareServer').isPresent()) {
+                property 'fabric.debug.disableModIds', 'square-rendering'
+            }
         }
     }
 }
@@ -36,6 +43,9 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
     modClientImplementation "net.caffeinemc:sodium-fabric:${project.sodium_version}"
+    if (providers.gradleProperty('sodiumExtra').isPresent()) {
+        modClientRuntimeOnly 'maven.modrinth:sodium-extra:mc1.21.11-0.8.3+fabric'
+    }
 
     testImplementation platform('org.junit:junit-bom:5.12.2')
     testImplementation 'org.junit.jupiter:junit-jupiter'
@@ -82,5 +92,16 @@ if (providers.gradleProperty('gameTests').isPresent()) {
         enableGameTests = false
         enableClientGameTests = true
         eula = true
+    }
+    loom.runs.clientGameTest {
+        if (providers.gradleProperty('externalServer').isPresent()) {
+            property 'fabric.client.gametest.disableNetworkSynchronizer', 'true'
+            property 'square-rendering.tests.server', project.externalServer
+            property 'square-rendering.tests.unsupportedServer',
+                    providers.gradleProperty('unsupportedServer').isPresent().toString()
+        }
+        if (providers.gradleProperty('unmodifiedClient').isPresent()) {
+            property 'fabric.debug.disableModIds', 'square-rendering'
+        }
     }
 }
