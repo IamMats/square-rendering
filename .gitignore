@@ -29,7 +29,12 @@ logs/
 build/
 run/
 run-server/
-docs/
 .vscode/
 .idea/
 *.iml
+
+# Java language-server / Eclipse generated files
+/bin/
+/.classpath
+/.project
+/.settings/
