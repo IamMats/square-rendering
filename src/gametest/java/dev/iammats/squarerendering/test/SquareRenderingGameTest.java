@@ -9,6 +9,7 @@ import net.caffeinemc.mods.sodium.client.config.ConfigManager;
 import net.caffeinemc.mods.sodium.client.config.structure.BooleanOption;
 import net.caffeinemc.mods.sodium.client.config.structure.OptionPage;
 import net.caffeinemc.mods.sodium.client.gui.VideoSettingsScreen;
+import net.caffeinemc.mods.sodium.client.render.SodiumWorldRenderer;
 import net.fabricmc.fabric.api.client.gametest.v1.FabricClientGameTest;
 import net.fabricmc.fabric.api.client.gametest.v1.context.ClientGameTestContext;
 import net.fabricmc.fabric.api.client.gametest.v1.context.TestServerContext;
@@ -75,6 +76,14 @@ public final class SquareRenderingGameTest implements FabricClientGameTest {
           });
       context.waitTicks(40);
       context.takeScreenshot("square-distance-16");
+      // Receiving corner chunks is not enough: Sodium must build and retain their terrain.
+      context.waitFor(
+          client -> SodiumWorldRenderer.instance().isSectionReady(15, -4, 15), 400);
+      context.runOnClient(
+          client ->
+              check(
+                  SodiumWorldRenderer.instance().isBoxVisible(240, -60, 240, 256, -59, 256),
+                  "Sodium culled terrain inside the square's diagonal corner"));
 
       server.runCommand("setblock 256 0 256 minecraft:gold_block");
       context.waitFor(
