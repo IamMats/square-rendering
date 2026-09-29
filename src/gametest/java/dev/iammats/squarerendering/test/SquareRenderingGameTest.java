@@ -9,6 +9,7 @@ import net.caffeinemc.mods.sodium.client.config.ConfigManager;
 import net.caffeinemc.mods.sodium.client.config.structure.BooleanOption;
 import net.caffeinemc.mods.sodium.client.config.structure.OptionPage;
 import net.caffeinemc.mods.sodium.client.gui.VideoSettingsScreen;
+import net.caffeinemc.mods.sodium.client.render.SodiumWorldRenderer;
 import net.fabricmc.fabric.api.client.gametest.v1.FabricClientGameTest;
 import net.fabricmc.fabric.api.client.gametest.v1.context.ClientGameTestContext;
 import net.fabricmc.fabric.api.client.gametest.v1.context.TestServerContext;
@@ -47,7 +48,7 @@ public final class SquareRenderingGameTest implements FabricClientGameTest {
                         .pages()
                         .getFirst()));
     context.waitTicks(2);
-    context.takeScreenshot("sodium-settings");
+    GameTestScreenshots.take(context, "sodium-settings");
     context.runOnClient(
         client -> {
           var option = option();
@@ -74,7 +75,15 @@ public final class SquareRenderingGameTest implements FabricClientGameTest {
             check(!RenderBounds.includesColumn(17, 17), "Support border leaked into rendering");
           });
       context.waitTicks(40);
-      context.takeScreenshot("square-distance-16");
+      GameTestScreenshots.take(context, "square-distance-16");
+      // Receiving corner chunks is not enough: Sodium must build and retain their terrain.
+      context.waitFor(
+          client -> SodiumWorldRenderer.instance().isSectionReady(15, -4, 15), 400);
+      context.runOnClient(
+          client ->
+              check(
+                  SodiumWorldRenderer.instance().isBoxVisible(240, -60, 240, 256, -59, 256),
+                  "Sodium culled terrain inside the square's diagonal corner"));
 
       server.runCommand("setblock 256 0 256 minecraft:gold_block");
       context.waitFor(
@@ -83,14 +92,14 @@ public final class SquareRenderingGameTest implements FabricClientGameTest {
 
       context.runOnClient(client -> client.options.setCameraType(CameraType.THIRD_PERSON_BACK));
       context.waitTicks(2);
-      context.takeScreenshot("square-third-person");
+      GameTestScreenshots.take(context, "square-third-person");
       context.runOnClient(client -> client.options.setCameraType(CameraType.FIRST_PERSON));
 
       toggle(context, false);
       awaitServerShape(context, server, false, 16);
       context.waitFor(
           client -> client.level.getChunk(16, 16, ChunkStatus.FULL, false) == null, 200);
-      context.takeScreenshot("original-distance-16");
+      GameTestScreenshots.take(context, "original-distance-16");
 
       toggle(context, true);
       awaitSquare(context, 16);
@@ -177,26 +186,26 @@ public final class SquareRenderingGameTest implements FabricClientGameTest {
     context.waitFor(
         client -> client.gameRenderer.getMainCamera().getFluidInCamera() == FogType.WATER);
     context.waitTicks(20);
-    context.takeScreenshot("water-fog");
+    GameTestScreenshots.take(context, "water-fog");
     // Use a separate pool: replacing water directly lets block updates turn lava into stone.
     server.runCommand("fill 29 0 -3 35 8 3 minecraft:lava");
     server.runCommand("tp @a 32.5 5 0.5 -45 15");
     context.waitFor(
         client -> client.gameRenderer.getMainCamera().getFluidInCamera() == FogType.LAVA);
     context.waitTicks(20);
-    context.takeScreenshot("lava-fog");
+    GameTestScreenshots.take(context, "lava-fog");
     server.runCommand("fill -4 0 -4 4 10 4 minecraft:air");
     server.runCommand("fill 28 0 -4 36 10 4 minecraft:air");
     server.runCommand("tp @a 0.5 5 0.5 -45 15");
     server.runCommand("effect give @a minecraft:blindness 30 0 true");
     context.waitFor(client -> client.player.hasEffect(MobEffects.BLINDNESS));
     context.waitTicks(20);
-    context.takeScreenshot("blindness-fog");
+    GameTestScreenshots.take(context, "blindness-fog");
     server.runCommand("effect clear @a");
     server.runCommand("effect give @a minecraft:darkness 30 0 true");
     context.waitFor(client -> client.player.hasEffect(MobEffects.DARKNESS));
     context.waitTicks(40);
-    context.takeScreenshot("darkness-fog");
+    GameTestScreenshots.take(context, "darkness-fog");
     server.runCommand("effect clear @a");
   }
 

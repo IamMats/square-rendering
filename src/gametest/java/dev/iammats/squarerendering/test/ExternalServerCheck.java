@@ -73,7 +73,7 @@ final class ExternalServerCheck {
             throw new AssertionError("Mod changed the client's normal requested distance");
           }
         });
-    context.takeScreenshot("external-client-" + installed + "-server-" + supported);
+    GameTestScreenshots.take(context, "external-client-" + installed + "-server-" + supported);
     context.runOnClient(client -> client.disconnectFromWorld(Component.literal("Test complete")));
     context.waitFor(client -> client.level == null);
     context.setScreen(TitleScreen::new);
