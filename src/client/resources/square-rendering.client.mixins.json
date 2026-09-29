@@ -1,7 +1,7 @@
 {
   "required": true,
   "package": "dev.iammats.squarerendering.client.mixin",
-  "compatibilityLevel": "JAVA_21",
+  "compatibilityLevel": "JAVA_25",
   "plugin": "dev.iammats.squarerendering.client.mixin.ClientMixinPlugin",
   "client": [
     "RenderSectionManagerMixin",

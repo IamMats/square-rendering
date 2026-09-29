@@ -6,13 +6,13 @@ import net.fabricmc.loader.api.FabricLoader;
 public final class ClientRequirements {
   private ClientRequirements() {}
 
-  /** Checks the precise Sodium version against which the mixins are tested. */
+  /** Checks the precise Sodium version targeted by the mixins. */
   public static boolean hasSupportedSodium() {
     return FabricLoader.getInstance()
         .getModContainer("sodium")
         .map(
             mod ->
-                mod.getMetadata().getVersion().getFriendlyString().split("\\+")[0].equals("0.8.14"))
+                mod.getMetadata().getVersion().getFriendlyString().split("\\+")[0].equals("0.9.2"))
         .orElse(false);
   }
 
@@ -20,7 +20,7 @@ public final class ClientRequirements {
   public static void verify() {
     if (!hasSupportedSodium()) {
       throw new IllegalStateException(
-          "Square Rendering requires Sodium 0.8.14 for Minecraft 1.21.11 on the client. "
+          "Square Rendering requires Sodium 0.9.2 for Minecraft 26.1.2 on the client. "
               + "Install that Sodium version alongside Square Rendering. "
               + "Dedicated servers do not need Sodium.");
     }

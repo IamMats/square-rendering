@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '1.16.1'
+    id 'net.fabricmc.fabric-loom' version '1.16.3'
     id 'checkstyle'
 }
 
@@ -39,12 +39,11 @@ loom {
 
 dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    mappings loom.officialMojangMappings()
-    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-    modClientImplementation "net.caffeinemc:sodium-fabric:${project.sodium_version}"
+    implementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+    clientImplementation "net.caffeinemc:sodium-fabric:${project.sodium_version}"
     if (providers.gradleProperty('sodiumExtra').isPresent()) {
-        modClientRuntimeOnly 'maven.modrinth:sodium-extra:mc1.21.11-0.8.3+fabric'
+        clientRuntimeOnly 'maven.modrinth:sodium-extra:mc26.1.2-0.9.4+fabric'
     }
 
     testImplementation platform('org.junit:junit-bom:5.12.2')
@@ -53,11 +52,11 @@ dependencies {
 }
 
 java {
-    toolchain.languageVersion = JavaLanguageVersion.of(21)
+    toolchain.languageVersion = JavaLanguageVersion.of(25)
 }
 
 tasks.withType(JavaCompile).configureEach {
-    options.release = 21
+    options.release = 25
     options.encoding = 'UTF-8'
 }
 
