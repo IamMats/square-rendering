@@ -5,7 +5,7 @@
   "plugin": "dev.iammats.squarerendering.client.mixin.ClientMixinPlugin",
   "client": [
     "RenderSectionManagerMixin",
-    "SectionCollectorMixin",
+    "VisibleChunkCollectorMixin",
     "SodiumWorldRendererMixin",
     "SodiumShaderLoaderMixin",
     "MinecraftShaderMixin"

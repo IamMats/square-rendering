@@ -96,7 +96,8 @@ public final class SquareRenderingGameTest implements FabricClientGameTest {
       awaitSquare(context, 16);
       server.runCommand("tp @a -16.5 5 -16.5 -45 15");
       context.waitFor(
-          client -> client.player.chunkPosition().x == -2 && client.player.chunkPosition().z == -2);
+          client ->
+              client.player.chunkPosition().x() == -2 && client.player.chunkPosition().z() == -2);
       awaitSquare(context, 16);
       awaitServerShape(context, server, true, 16);
 
@@ -208,7 +209,7 @@ public final class SquareRenderingGameTest implements FabricClientGameTest {
           var center = client.player.chunkPosition();
           for (int x = -radius - 1; x <= radius + 1; x++) {
             for (int z = -radius - 1; z <= radius + 1; z++) {
-              if (client.level.getChunk(center.x + x, center.z + z, ChunkStatus.FULL, false)
+              if (client.level.getChunk(center.x() + x, center.z() + z, ChunkStatus.FULL, false)
                   == null) {
                 return false;
               }
@@ -234,7 +235,8 @@ public final class SquareRenderingGameTest implements FabricClientGameTest {
                 }
                 if (view instanceof SquareTrackingView square) {
                   var center = player.chunkPosition();
-                  return square.visibleSquare().equals(new ChunkSquare(center.x, center.z, radius));
+                  return square.visibleSquare()
+                      .equals(new ChunkSquare(center.x(), center.z(), radius));
                 }
                 return true;
               });

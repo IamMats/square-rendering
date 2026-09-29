@@ -27,8 +27,10 @@ public final class SquareRendering implements ModInitializer {
   @Override
   @SuppressWarnings("null")
   public void onInitialize() {
-    PayloadTypeRegistry.playC2S().register(SquareRequestPayload.TYPE, SquareRequestPayload.CODEC);
-    PayloadTypeRegistry.playS2C().register(SquareStatusPayload.TYPE, SquareStatusPayload.CODEC);
+    PayloadTypeRegistry.serverboundPlay()
+        .register(SquareRequestPayload.TYPE, SquareRequestPayload.CODEC);
+    PayloadTypeRegistry.clientboundPlay()
+        .register(SquareStatusPayload.TYPE, SquareStatusPayload.CODEC);
     ServerPlayNetworking.registerGlobalReceiver(
         SquareRequestPayload.TYPE,
         (payload, context) -> {

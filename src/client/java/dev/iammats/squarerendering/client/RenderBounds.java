@@ -1,7 +1,6 @@
 package dev.iammats.squarerendering.client;
 
 import dev.iammats.squarerendering.geometry.ChunkSquare;
-import net.caffeinemc.mods.sodium.client.render.chunk.RenderSection;
 import net.caffeinemc.mods.sodium.client.render.viewport.CameraTransform;
 import net.minecraft.client.Minecraft;
 
@@ -22,18 +21,18 @@ public final class RenderBounds {
     }
     var center = player.chunkPosition();
     int radius = SquareRenderingClient.effectiveRadius();
-    square = new ChunkSquare(center.x, center.z, radius);
+    square = new ChunkSquare(center.x(), center.z(), radius);
     camera = new CameraTransform(cameraX, cameraY, cameraZ);
 
     // Include the farthest possible corner, the model margin, and displaced third-person cameras.
     double farX =
         Math.max(
-            Math.abs((center.x - radius) * 16.0 - 1 - cameraX),
-            Math.abs((center.x + radius + 1) * 16.0 + 1 - cameraX));
+            Math.abs((center.x() - radius) * 16.0 - 1 - cameraX),
+            Math.abs((center.x() + radius + 1) * 16.0 + 1 - cameraX));
     double farZ =
         Math.max(
-            Math.abs((center.z - radius) * 16.0 - 1 - cameraZ),
-            Math.abs((center.z + radius + 1) * 16.0 + 1 - cameraZ));
+            Math.abs((center.z() - radius) * 16.0 - 1 - cameraZ),
+            Math.abs((center.z() + radius + 1) * 16.0 + 1 - cameraZ));
     searchDistance = (float) Math.hypot(farX, farZ) + 1.0f;
   }
 
@@ -59,15 +58,15 @@ public final class RenderBounds {
   }
 
   /** Tests exact column membership and Sodium's original vertical distance limit. */
-  public static boolean includes(RenderSection section) {
+  public static boolean includes(int x, int y, int z) {
     if (!active()) {
       return true;
     }
-    if (!square.contains(section.getChunkX(), section.getChunkZ())) {
+    if (!square.contains(x, z)) {
       return false;
     }
     // Match Sodium's original padded-box vertical distance test despite the wider search radius.
-    int originY = section.getOriginY() - camera.intY;
+    int originY = (y << 4) - camera.intY;
     int nearestY = Math.min(Math.max(0, originY - 1), originY + 17);
     return Math.abs(nearestY - camera.fracY) < square.radius() * 16.0f;
   }

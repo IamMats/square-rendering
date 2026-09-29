@@ -44,7 +44,7 @@ final class ExternalServerCheck {
             for (int z = -radius - 1; z <= radius + 1; z++) {
               if ((installed && supported)
                   || ChunkTrackingView.isWithinDistance(0, 0, radius, x, z, true)) {
-                if (client.level.getChunk(center.x + x, center.z + z, ChunkStatus.FULL, false)
+                if (client.level.getChunk(center.x() + x, center.z() + z, ChunkStatus.FULL, false)
                     == null) {
                   return false;
                 }
@@ -59,7 +59,8 @@ final class ExternalServerCheck {
           int radius = client.options.getEffectiveRenderDistance();
           var center = client.player.chunkPosition();
           boolean cornerLoaded =
-              client.level.getChunk(center.x + radius, center.z + radius, ChunkStatus.FULL, false)
+              client.level.getChunk(
+                      center.x() + radius, center.z() + radius, ChunkStatus.FULL, false)
                   != null;
           if (cornerLoaded != (installed && supported)) {
             throw new AssertionError(
