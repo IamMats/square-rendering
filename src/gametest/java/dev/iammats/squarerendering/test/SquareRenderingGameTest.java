@@ -161,7 +161,7 @@ public final class SquareRenderingGameTest implements FabricClientGameTest {
     context.waitFor(client -> reload.isDone(), 1200);
     reload.join();
     context.waitFor(
-        client -> client.getOverlay() == null && client.levelRenderer.hasRenderedAllSections(),
+        client -> client.gui.overlay() == null && client.levelRenderer.hasRenderedAllSections(),
         6000);
     context.waitTicks(4);
   }
@@ -175,14 +175,14 @@ public final class SquareRenderingGameTest implements FabricClientGameTest {
     server.runCommand("gamemode creative @a");
     server.runCommand("fill -3 0 -3 3 8 3 minecraft:water");
     context.waitFor(
-        client -> client.gameRenderer.getMainCamera().getFluidInCamera() == FogType.WATER);
+        client -> client.gameRenderer.mainCamera().getFluidInCamera() == FogType.WATER);
     context.waitTicks(20);
     context.takeScreenshot("water-fog");
     // Use a separate pool: replacing water directly lets block updates turn lava into stone.
     server.runCommand("fill 29 0 -3 35 8 3 minecraft:lava");
     server.runCommand("tp @a 32.5 5 0.5 -45 15");
     context.waitFor(
-        client -> client.gameRenderer.getMainCamera().getFluidInCamera() == FogType.LAVA);
+        client -> client.gameRenderer.mainCamera().getFluidInCamera() == FogType.LAVA);
     context.waitTicks(20);
     context.takeScreenshot("lava-fog");
     server.runCommand("fill -4 0 -4 4 10 4 minecraft:air");

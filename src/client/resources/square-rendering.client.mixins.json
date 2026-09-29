@@ -7,7 +7,6 @@
     "RenderSectionManagerMixin",
     "VisibleChunkCollectorMixin",
     "SodiumWorldRendererMixin",
-    "SodiumShaderLoaderMixin",
     "MinecraftShaderMixin"
   ],
   "injectors": {"defaultRequire": 1}

@@ -25,6 +25,7 @@ public abstract class SodiumWorldRendererMixin {
       float tickDelta,
       Long2ObjectMap<SortedSet<BlockDestructionProgress>> progression,
       LevelRenderState levelRenderState,
+      boolean isGlobal,
       CallbackInfo ci) {
     var position = blockEntity.getBlockPos();
     if (!RenderBounds.includesColumn(position.getX() >> 4, position.getZ() >> 4)) {

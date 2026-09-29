@@ -62,7 +62,7 @@ public final class SquareRenderingClient implements ClientModInitializer {
         (payload, context) -> {
           if (payload.radius() >= 2 && payload.radius() <= 32) {
             approvedRadius = payload.radius();
-            context.client().levelRenderer.needsUpdate();
+            context.client().levelRenderer.resetLevelRenderData();
           }
         });
     ClientPlayConnectionEvents.JOIN.register(

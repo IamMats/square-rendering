@@ -20,7 +20,7 @@ public final class ClientRequirements {
   public static void verify() {
     if (!hasSupportedSodium()) {
       throw new IllegalStateException(
-          "Square Rendering requires Sodium 0.9.2 for Minecraft 26.1.2 on the client. "
+          "Square Rendering requires Sodium 0.9.2 for Minecraft 26.2 on the client. "
               + "Install that Sodium version alongside Square Rendering. "
               + "Dedicated servers do not need Sodium.");
     }
