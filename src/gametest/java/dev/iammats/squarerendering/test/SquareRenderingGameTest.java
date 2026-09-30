@@ -9,6 +9,7 @@ import net.caffeinemc.mods.sodium.client.config.ConfigManager;
 import net.caffeinemc.mods.sodium.client.config.structure.BooleanOption;
 import net.caffeinemc.mods.sodium.client.config.structure.OptionPage;
 import net.caffeinemc.mods.sodium.client.gui.VideoSettingsScreen;
+import net.caffeinemc.mods.sodium.client.render.SodiumWorldRenderer;
 import net.fabricmc.fabric.api.client.gametest.v1.FabricClientGameTest;
 import net.fabricmc.fabric.api.client.gametest.v1.context.ClientGameTestContext;
 import net.fabricmc.fabric.api.client.gametest.v1.context.TestServerContext;
@@ -35,6 +36,7 @@ public final class SquareRenderingGameTest implements FabricClientGameTest {
           client.options.simulationDistance().set(8);
           SquareRenderingClient.setEnabled(true);
         });
+    FogIncludeCheck.run(context, true);
     context.setScreen(
         () ->
             VideoSettingsScreen.createScreen(
@@ -75,6 +77,14 @@ public final class SquareRenderingGameTest implements FabricClientGameTest {
           });
       context.waitTicks(40);
       context.takeScreenshot("square-distance-16");
+      // Receiving corner chunks is not enough: Sodium must build and retain their terrain.
+      context.waitFor(
+          client -> SodiumWorldRenderer.instance().isSectionReady(15, -4, 15), 400);
+      context.runOnClient(
+          client ->
+              check(
+                  SodiumWorldRenderer.instance().isBoxVisible(240, -60, 240, 256, -59, 256),
+                  "Sodium culled terrain inside the square's diagonal corner"));
 
       server.runCommand("setblock 256 0 256 minecraft:gold_block");
       context.waitFor(
@@ -96,7 +106,8 @@ public final class SquareRenderingGameTest implements FabricClientGameTest {
       awaitSquare(context, 16);
       server.runCommand("tp @a -16.5 5 -16.5 -45 15");
       context.waitFor(
-          client -> client.player.chunkPosition().x == -2 && client.player.chunkPosition().z == -2);
+          client ->
+              client.player.chunkPosition().x() == -2 && client.player.chunkPosition().z() == -2);
       awaitSquare(context, 16);
       awaitServerShape(context, server, true, 16);
 
@@ -159,8 +170,9 @@ public final class SquareRenderingGameTest implements FabricClientGameTest {
             });
     context.waitFor(client -> reload.isDone(), 1200);
     reload.join();
+    FogIncludeCheck.run(context, enabled);
     context.waitFor(
-        client -> client.getOverlay() == null && client.levelRenderer.hasRenderedAllSections(),
+        client -> client.gui.overlay() == null && client.levelRenderer.hasRenderedAllSections(),
         6000);
     context.waitTicks(4);
   }
@@ -174,14 +186,14 @@ public final class SquareRenderingGameTest implements FabricClientGameTest {
     server.runCommand("gamemode creative @a");
     server.runCommand("fill -3 0 -3 3 8 3 minecraft:water");
     context.waitFor(
-        client -> client.gameRenderer.getMainCamera().getFluidInCamera() == FogType.WATER);
+        client -> client.gameRenderer.mainCamera().getFluidInCamera() == FogType.WATER);
     context.waitTicks(20);
     context.takeScreenshot("water-fog");
     // Use a separate pool: replacing water directly lets block updates turn lava into stone.
     server.runCommand("fill 29 0 -3 35 8 3 minecraft:lava");
     server.runCommand("tp @a 32.5 5 0.5 -45 15");
     context.waitFor(
-        client -> client.gameRenderer.getMainCamera().getFluidInCamera() == FogType.LAVA);
+        client -> client.gameRenderer.mainCamera().getFluidInCamera() == FogType.LAVA);
     context.waitTicks(20);
     context.takeScreenshot("lava-fog");
     server.runCommand("fill -4 0 -4 4 10 4 minecraft:air");
@@ -208,7 +220,7 @@ public final class SquareRenderingGameTest implements FabricClientGameTest {
           var center = client.player.chunkPosition();
           for (int x = -radius - 1; x <= radius + 1; x++) {
             for (int z = -radius - 1; z <= radius + 1; z++) {
-              if (client.level.getChunk(center.x + x, center.z + z, ChunkStatus.FULL, false)
+              if (client.level.getChunk(center.x() + x, center.z() + z, ChunkStatus.FULL, false)
                   == null) {
                 return false;
               }
@@ -234,7 +246,8 @@ public final class SquareRenderingGameTest implements FabricClientGameTest {
                 }
                 if (view instanceof SquareTrackingView square) {
                   var center = player.chunkPosition();
-                  return square.visibleSquare().equals(new ChunkSquare(center.x, center.z, radius));
+                  return square.visibleSquare()
+                      .equals(new ChunkSquare(center.x(), center.z(), radius));
                 }
                 return true;
               });

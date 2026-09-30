@@ -29,10 +29,11 @@ final class ExternalServerCheck {
           String address = System.getProperty("square-rendering.tests.server");
           var data = new ServerData("Compatibility test", address, ServerData.Type.OTHER);
           ConnectScreen.startConnecting(
-              client.screen, client, ServerAddress.parseString(address), data, false, null);
+              client.gui.screen(), client, ServerAddress.parseString(address), data, false, null);
         });
     context.waitFor(
-        client -> client.player != null && client.level != null && client.screen == null, 6000);
+        client -> client.player != null && client.level != null && client.gui.screen() == null,
+        6000);
     context.waitFor(
         client -> {
           int radius = client.options.getEffectiveRenderDistance();
@@ -44,7 +45,7 @@ final class ExternalServerCheck {
             for (int z = -radius - 1; z <= radius + 1; z++) {
               if ((installed && supported)
                   || ChunkTrackingView.isWithinDistance(0, 0, radius, x, z, true)) {
-                if (client.level.getChunk(center.x + x, center.z + z, ChunkStatus.FULL, false)
+                if (client.level.getChunk(center.x() + x, center.z() + z, ChunkStatus.FULL, false)
                     == null) {
                   return false;
                 }
@@ -59,7 +60,8 @@ final class ExternalServerCheck {
           int radius = client.options.getEffectiveRenderDistance();
           var center = client.player.chunkPosition();
           boolean cornerLoaded =
-              client.level.getChunk(center.x + radius, center.z + radius, ChunkStatus.FULL, false)
+              client.level.getChunk(
+                      center.x() + radius, center.z() + radius, ChunkStatus.FULL, false)
                   != null;
           if (cornerLoaded != (installed && supported)) {
             throw new AssertionError(

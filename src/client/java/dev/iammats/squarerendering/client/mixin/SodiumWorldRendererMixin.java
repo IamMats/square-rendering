@@ -6,7 +6,7 @@ import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import java.util.SortedSet;
 import net.caffeinemc.mods.sodium.client.render.SodiumWorldRenderer;
 import net.minecraft.client.Camera;
-import net.minecraft.client.renderer.state.LevelRenderState;
+import net.minecraft.client.renderer.state.level.LevelRenderState;
 import net.minecraft.server.level.BlockDestructionProgress;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.spongepowered.asm.mixin.Mixin;
@@ -25,6 +25,7 @@ public abstract class SodiumWorldRendererMixin {
       float tickDelta,
       Long2ObjectMap<SortedSet<BlockDestructionProgress>> progression,
       LevelRenderState levelRenderState,
+      boolean isGlobal,
       CallbackInfo ci) {
     var position = blockEntity.getBlockPos();
     if (!RenderBounds.includesColumn(position.getX() >> 4, position.getZ() >> 4)) {

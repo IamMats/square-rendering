@@ -39,8 +39,8 @@ class SquareTrackingViewTest {
     SquareTrackingView.difference(square(0, 0, 16), square(1, 0, 16), added::add, removed::add);
     assertEquals(35, added.size());
     assertEquals(35, removed.size());
-    assertTrue(added.stream().allMatch(pos -> pos.x == 18));
-    assertTrue(removed.stream().allMatch(pos -> pos.x == -17));
+    assertTrue(added.stream().allMatch(pos -> pos.x() == 18));
+    assertTrue(removed.stream().allMatch(pos -> pos.x() == -17));
   }
 
   @Test

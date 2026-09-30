@@ -46,7 +46,8 @@ public abstract class ChunkMapMixin {
       return;
     }
     ChunkPos center = player.chunkPosition();
-    SquareTrackingView next = new SquareTrackingView(new ChunkSquare(center.x, center.z, radius));
+    SquareTrackingView next =
+        new SquareTrackingView(new ChunkSquare(center.x(), center.z(), radius));
     if (!next.equals(player.getChunkTrackingView())) {
       applyChunkTrackingView(player, next);
     }
@@ -69,7 +70,7 @@ public abstract class ChunkMapMixin {
     }
     ChunkPos center = square.center();
     if (!center.equals(oldCenter)) {
-      player.connection.send(new ClientboundSetChunkCacheCenterPacket(center.x, center.z));
+      player.connection.send(new ClientboundSetChunkCacheCenterPacket(center.x(), center.z()));
     }
   }
 }

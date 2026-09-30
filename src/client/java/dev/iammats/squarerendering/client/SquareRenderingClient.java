@@ -5,6 +5,7 @@ import dev.iammats.squarerendering.config.ConfigStore;
 import dev.iammats.squarerendering.network.SquareRequestPayload;
 import dev.iammats.squarerendering.network.SquareStatusPayload;
 import java.io.IOException;
+import net.caffeinemc.mods.sodium.client.render.SodiumWorldRenderer;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -62,7 +63,7 @@ public final class SquareRenderingClient implements ClientModInitializer {
         (payload, context) -> {
           if (payload.radius() >= 2 && payload.radius() <= 32) {
             approvedRadius = payload.radius();
-            context.client().levelRenderer.needsUpdate();
+            SodiumWorldRenderer.instance().scheduleTerrainUpdate();
           }
         });
     ClientPlayConnectionEvents.JOIN.register(

@@ -1,8 +1,24 @@
 # Validation
 
-These results apply to Square Rendering `0.1.0+mc1.21.11` with the versions pinned in the README. Runtime tests use Java 21 on Linux, Xvfb, and Mesa llvmpipe (OpenGL 4.5). They validate real Minecraft clients, chunk packets, and shader compilation; they are not a GPU performance benchmark.
+## Minecraft 26.3
 
-## Automated build checks
+Validated on 2026-09-30 using Java 25 on CachyOS Linux, AMD Radeon RX 9070 XT, Mesa 26.2.3, OpenGL 4.6. Dependencies are listed in the [README](../README.md); Loom `1.18-SNAPSHOT` resolved to 1.18.2 during validation.
+
+- Build: 22 JUnit tests and Google Java Style checks pass.
+- `./gradlew -PgameTests build runClientGameTest` passes, including diagonal-corner terrain building and visibility, chunk delivery and live block updates, settings Apply/Undo/Reset, fog includes and shader reloads, negative coordinates, distance changes, dimension changes, respawn, environmental fog, dedicated-server networking, and mixin audit.
+- `./gradlew -PgameTests -PsodiumExtra build runClientGameTest` passes with Sodium Extra `0.9.4+mc26.3` and its default fog settings.
+- Separate dedicated-server process: starts with `Env=SERVER`, Fabric API, and Square Rendering, without Sodium; reaches `Done` and exits cleanly using `stop`.
+- Artifact inspection: `square-rendering-0.1.0+mc26.3.jar` declares Minecraft 26.3 and excludes the runtime test harness.
+
+Minecraft 26.3 removed `ShaderManager$CompilationCache`. The fog mixin now transforms includes at `ShaderSource.CachedIncludeSource.create`, before RenderPearl stores the native shader source. The runtime harness checks real Minecraft and Sodium fog includes through that hook, including original-source restoration when disabled and spherical-distance preservation when enabled.
+
+Screenshots in `build/run/clientGameTest/screenshots/` show the square diagonal corner with the option enabled and the rounded boundary when disabled. Each runtime run replaces this directory. These checks are functional validation, not a performance benchmark.
+
+## Historical Minecraft 1.21.11 results
+
+The results below apply to Square Rendering `0.1.0+mc1.21.11` and its historical dependencies. Those runtime tests used Java 21 on Linux, Xvfb, and Mesa llvmpipe (OpenGL 4.5). They validate real Minecraft clients, chunk packets, and shader compilation; they are not a GPU performance benchmark.
+
+### Automated build checks
 
 `./gradlew build` passes 22 JUnit tests and Google Java Style checks. The remapped installable artifact is the single JAR in `build/libs`. The runtime test mod is excluded from it.
 
@@ -15,7 +31,7 @@ These results apply to Square Rendering `0.1.0+mc1.21.11` with the versions pinn
 | Persistence | Default file creation, enabled/disabled round trips, missing keys, and malformed-file preservation |
 | Fog source | Only ordinary distance changes; spherical environmental fog remains intact; disabled, missing, unrelated, and already-transformed sources are handled |
 
-## Minecraft runtime harness
+### Minecraft runtime harness
 
 Run:
 
@@ -45,7 +61,7 @@ Verified by the harness:
 
 Screenshots and game logs are generated under `build/run/clientGameTest/`. The tests check packet delivery and render-bound membership directly; screenshots provide visual evidence rather than cross-driver pixel-identical assertions.
 
-## Independent client/server checks
+### Independent client/server checks
 
 A separate `./gradlew runServer --args nogui` process successfully starts with `Env=SERVER`, Fabric API, and Square Rendering. Its loaded-mod list contains no Sodium. It reaches Minecraft's `Done` startup message and shuts down cleanly using `stop`.
 
@@ -75,7 +91,7 @@ For a server without Square Rendering, stop the server, restart it with `./gradl
 
 These checks compare actual received chunks against the expected square or vanilla footprint and ensure the client's requested render distance stays at 16. The debug exclusion flags apply only to these development launches.
 
-## Remaining manual coverage and limits
+### Remaining manual coverage and limits
 
 - Run a simultaneous multiplayer session with several independent modified and unmodified clients, including movement in different directions and dimensions. Sequential connection checks do not establish behavior under concurrent player load.
 - Compare environmental fog visually on hardware GPUs and in varied biomes, lighting, and weather. Unit checks establish shader-source preservation; shader compilation alone cannot prove every visual effect.

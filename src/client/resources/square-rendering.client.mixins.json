@@ -1,13 +1,12 @@
 {
   "required": true,
   "package": "dev.iammats.squarerendering.client.mixin",
-  "compatibilityLevel": "JAVA_21",
+  "compatibilityLevel": "JAVA_25",
   "plugin": "dev.iammats.squarerendering.client.mixin.ClientMixinPlugin",
   "client": [
     "RenderSectionManagerMixin",
-    "SectionCollectorMixin",
+    "VisibleChunkCollectorMixin",
     "SodiumWorldRendererMixin",
-    "SodiumShaderLoaderMixin",
     "MinecraftShaderMixin"
   ],
   "injectors": {"defaultRequire": 1}

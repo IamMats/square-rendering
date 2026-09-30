@@ -15,7 +15,7 @@ public final class FogShaderTransform {
     return enabled ? source.replace(SODIUM_CYLINDER, SODIUM_SQUARE) : source;
   }
 
-  /** Changes the Minecraft fog include after preprocessing, preserving missing shader results. */
+  /** Changes the Minecraft fog include while preserving missing shader results. */
   public static String minecraft(String source, boolean enabled) {
     return enabled && source != null ? source.replace(VANILLA_CYLINDER, VANILLA_SQUARE) : source;
   }

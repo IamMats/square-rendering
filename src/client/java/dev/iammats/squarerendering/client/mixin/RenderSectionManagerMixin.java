@@ -17,7 +17,10 @@ public abstract class RenderSectionManagerMixin {
     RenderBounds.capture(cameraPosition.x(), cameraPosition.y(), cameraPosition.z());
   }
 
-  @ModifyReturnValue(method = "getSearchDistance", at = @At("RETURN"))
+  // The regular/wide graph search bypasses getSearchDistance and bounds the local search too.
+  @ModifyReturnValue(
+      method = {"getSearchDistance", "getSearchDistanceForCullType"},
+      at = @At("RETURN"))
   private float squareRenderingCoverCorners(float original) {
     return RenderBounds.active() ? RenderBounds.searchDistance() : original;
   }
