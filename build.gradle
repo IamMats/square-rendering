@@ -1,5 +1,5 @@
 plugins {
-    id 'net.fabricmc.fabric-loom' version '1.17.21'
+    id 'net.fabricmc.fabric-loom' version "${loom_version}"
     id 'checkstyle'
 }
 
@@ -40,10 +40,10 @@ loom {
 dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     implementation "net.fabricmc:fabric-loader:${project.loader_version}"
-    implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+    implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
     clientImplementation "net.caffeinemc:sodium-fabric:${project.sodium_version}"
     if (providers.gradleProperty('sodiumExtra').isPresent()) {
-        clientRuntimeOnly 'maven.modrinth:sodium-extra:mc26.2-0.9.4+fabric'
+        clientRuntimeOnly 'maven.modrinth:sodium-extra:mc26.3-0.9.4+fabric'
     }
 
     testImplementation platform('org.junit:junit-bom:5.12.2')

@@ -1,6 +1,6 @@
 # Square Rendering
 
-A Fabric mod for **Minecraft Java 26.2** that renders a square of chunks around the player's current chunk, with a toggle in Sodium's Video Settings. Useful for observing perimeter operations such as world eaters and trenchers.
+A Fabric mod for **Minecraft Java 26.3** that renders a square of chunks around the player's current chunk, with a toggle in Sodium's Video Settings. Useful for observing perimeter operations such as world eaters and trenchers.
 
 At render distance **16**, the visible footprint includes a **33 × 33 grid**: 16 chunks in each horizontal direction plus the center chunk. Distance fog follows a square shape so the diagonal corners can be seen. Chunks outside the camera's view or hidden behind terrain still benefit from normal culling.
 
@@ -22,10 +22,10 @@ Square Rendering has **one mod JAR and one mod ID**. Use the same JAR for both c
 
 Use **Java 25 or newer** to run Minecraft.
 
-1. Install Fabric Loader **0.19.5 or newer** for Minecraft **26.2**.
-2. Install Fabric API **0.161.0+26.2** (the tested version) or a compatible later build for Minecraft 26.2.
-3. On the client, install **Sodium 0.9.2+mc26.2**. The rendering mixins target this specific Sodium version.
-4. Put `square-rendering-0.1.0+mc26.2.jar` in the instance's `mods` directory.
+1. Install Fabric Loader **0.19.5 or newer** for Minecraft **26.3**.
+2. Install Fabric API **0.161.0+26.3** (the tested version) or a compatible later build for Minecraft 26.3.
+3. On the client, install **Sodium 0.9.2+mc26.3**. The rendering mixins target this specific Sodium version.
+4. Put `square-rendering-0.1.0+mc26.3.jar` in the instance's `mods` directory.
 5. For full corners on a multiplayer server, put that **same file** in the Fabric server's `mods` directory as well.
 
 The server continues to accept clients without Square Rendering. Their chunk-tracking behavior remains unchanged. A client with Square Rendering can also join servers without the mod; it cannot display chunks those servers never send. The mod does not cache old chunks or advertise a larger render distance to the server.
@@ -68,6 +68,8 @@ Server support changes chunk tracking separately for each opted-in player. The r
 
 Ordinary distance fog uses horizontal Chebyshev distance. Spherical environmental fog, such as water, lava, blindness, and darkness, is preserved. Simulation distance, ticking rules, and ordinary entity-tracking distances are unchanged. Seeing terrain in a chunk does not override the separate rules for seeing entities or running particular farm mechanics.
 
+On Minecraft 26.3, the fog hook transforms Minecraft and Sodium shader includes before the new RenderPearl renderer caches them for compilation. Applying the toggle reloads those includes with the selected fog shape.
+
 More terrain can be rendered than with the original circular cutoff, increasing GPU work, memory use, and multiplayer chunk traffic.
 
 ## Building
@@ -87,22 +89,22 @@ gradlew.bat build
 The single installable artifact is:
 
 ```text
-build/libs/square-rendering-0.1.0+mc26.2.jar
+build/libs/square-rendering-0.1.0+mc26.3.jar
 ```
 
 The wrapper downloads Gradle automatically and verifies its distribution checksum. Dependency downloads require internet access on the first build. No separate server or sources JAR is published by this project.
 
-| Component | Pinned development version |
+| Component | Development version |
 | --- | --- |
 | Java | 25 |
-| Minecraft | 26.2, unobfuscated |
-| Gradle Wrapper | 9.5.1 |
-| Fabric Loom | 1.17.21 |
+| Minecraft | 26.3, unobfuscated |
+| Gradle Wrapper | 9.7.0 |
+| Fabric Loom | 1.18-SNAPSHOT |
 | Fabric Loader | 0.19.5 |
-| Fabric API | 0.161.0+26.2 |
-| Sodium | 0.9.2+mc26.2 |
+| Fabric API | 0.161.0+26.3 |
+| Sodium | 0.9.2+mc26.3 |
 
-This branch uses the non-remapping `net.fabricmc.fabric-loom` plugin for unobfuscated Minecraft. Common/server code and client code are separated into source sets and packaged together under `square-rendering`.
+This branch uses the non-remapping `net.fabricmc.fabric-loom` plugin for unobfuscated Minecraft. Versions are configured in `gradle.properties`, including `loom_version` and `fabric_api_version`. Loom 1.18 requires Gradle 9.7 or newer; the requested `1.18-SNAPSHOT` currently resolves to Loom 1.18.2. Common/server code and client code are separated into source sets and packaged together under `square-rendering`.
 
 Development launches:
 
@@ -131,16 +133,16 @@ On a headless Linux machine with Xvfb and Mesa installed:
 xvfb-run -a env LIBGL_ALWAYS_SOFTWARE=1 ./gradlew -PgameTests runClientGameTest
 ```
 
-This creates disposable test worlds, runs a client and temporary dedicated server, and accepts Minecraft's EULA for that temporary server. It checks real chunk delivery, Sodium building and retaining diagonal-corner terrain, live corner block updates, toggle changes, shader reloads, negative-coordinate movement, and distance changes. Runtime screenshots and logs are stored in the Gradle test run directory.
+This creates disposable test worlds, runs a client and temporary dedicated server, and accepts Minecraft's EULA for that temporary server. It checks real chunk delivery, Sodium building and retaining diagonal-corner terrain, live corner block updates, toggle changes, shader reloads, negative-coordinate movement, and distance changes. It also inspects the real cached Minecraft and Sodium fog includes: square distance when enabled, preserved spherical distance, and the original source when disabled. Runtime screenshots and logs are stored in the Gradle test run directory.
 
-Add `-PsodiumExtra` to run with **Sodium Extra 0.9.4 for Minecraft 26.2** (`mc26.2-0.9.4+fabric`). This is an optional development runtime dependency and is not bundled.
+Add `-PsodiumExtra` to run with **Sodium Extra 0.9.4 for Minecraft 26.3** (`mc26.3-0.9.4+fabric`). This is an optional development runtime dependency and is not bundled.
 
-The build and runtime harness, including the diagonal-corner check, passed for this branch with the pinned dependencies above. See the [validation document](docs/validation.md) for historical 1.21.11 results and additional test procedures.
+The Minecraft 26.3 build, all 22 unit tests, and the runtime harness pass, both with and without Sodium Extra. A separate dedicated server also starts and stops successfully without Sodium. See the [validation document](docs/validation.md) for results and additional test procedures.
 
 ## Compatibility
 
-- Fabric and Minecraft **26.2** only.
-- Sodium **0.9.2+mc26.2** is required on the client and is not required on a dedicated server. Sodium Extra is optional.
+- Fabric and Minecraft **26.3** only.
+- Sodium **0.9.2+mc26.3** is required on the client and is not required on a dedicated server. Sodium Extra is optional.
 - Iris shader packs, custom fog-shape overrides, vanilla rendering without Sodium, and non-Fabric server implementations are outside the initial compatibility target.
 - Other mods that change chunk tracking, terrain collection, or fog shaders may require additional integration. Circular Rendering changes the footprint in the opposite direction and should not be used alongside this mod.
 

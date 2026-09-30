@@ -36,6 +36,7 @@ public final class SquareRenderingGameTest implements FabricClientGameTest {
           client.options.simulationDistance().set(8);
           SquareRenderingClient.setEnabled(true);
         });
+    FogIncludeCheck.run(context, true);
     context.setScreen(
         () ->
             VideoSettingsScreen.createScreen(
@@ -169,6 +170,7 @@ public final class SquareRenderingGameTest implements FabricClientGameTest {
             });
     context.waitFor(client -> reload.isDone(), 1200);
     reload.join();
+    FogIncludeCheck.run(context, enabled);
     context.waitFor(
         client -> client.gui.overlay() == null && client.levelRenderer.hasRenderedAllSections(),
         6000);
